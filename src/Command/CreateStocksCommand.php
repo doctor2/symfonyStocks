@@ -15,6 +15,7 @@ class CreateStocksCommand extends Command
 {
     private $tinkoffToken;
     private $stockRepository;
+
     protected static $defaultName = 'app:stocks:create';
     protected static $defaultDescription = 'Create stocks from tinkoff api';
 

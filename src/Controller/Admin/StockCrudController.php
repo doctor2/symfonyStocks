@@ -3,6 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Stock;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
@@ -22,9 +24,11 @@ class StockCrudController extends AbstractCrudController
         return Stock::class;
     }
 
-    public function createEntity(string $entityFqcn)
+    public function configureActions(Actions $actions): Actions
     {
-        return new $entityFqcn('', '', '', '');
+        return $actions
+            ->disable(Action::NEW, Action::DELETE)
+        ;
     }
 
     public function configureFilters(Filters $filters): Filters
