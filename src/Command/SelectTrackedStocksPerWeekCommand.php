@@ -54,14 +54,14 @@ class SelectTrackedStocksPerWeekCommand extends Command
                 ->getPayload()->getCandles();
 
             if (empty($candles)) {
-                $io->error(sprintf('id %d, name %s', $stock->getId(), $stock->getName()));
+                $io->error(sprintf('id %d, name %s', (int) $stock->getId(), (string) $stock->getName()));
 
                 continue;
             }
 
             $this->updateStock($stock, $candles);
 
-            $io->note(sprintf('id %d, name %s', $stock->getId(), $stock->getName()));
+            $io->note(sprintf('id %d, name %s', (int) $stock->getId(), (string) $stock->getName()));
 
             sleep(rand(3, 7));
         }

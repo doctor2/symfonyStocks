@@ -164,7 +164,7 @@ class Stock
 
     public function __toString(): string
     {
-        return $this->getName();
+        return (string) $this->getName();
     }
 
     public function getIsTracked(): ?bool
@@ -272,7 +272,7 @@ class Stock
         <a href="https://www.tradingview.com/chart/?symbol=TICKET" target="_blank">tradingview</a>, 
         <a href="https://www.tinkoff.ru/invest/catalog/?query=TICKET" target="_blank">tinkoff</a>';
 
-        $this->usefulLinks = str_replace('TICKET', $this->getTicker(), $links);
+        $this->usefulLinks = str_replace('TICKET', (string) $this->getTicker(), $links);
     }
 
     public function setUsefulLinks(string $usefulLinks): self

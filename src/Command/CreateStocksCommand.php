@@ -37,11 +37,11 @@ class CreateStocksCommand extends Command
 
         /** @var MarketInstrument $instrument */
         foreach ($response->getPayload()->getInstruments() as $instrument) {
-            if (in_array($instrument->getFigi(), $stockFigis)) {
+            if (in_array($instrument->getFigi(), $stockFigis, true)) {
                 continue;
             }
 
-            $this->createStock($instrument, $stockFigis);
+            $this->createStock($instrument);
 
             $io->note($instrument->getName());
         }

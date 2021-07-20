@@ -50,7 +50,6 @@ class StockCrudController extends AbstractCrudController
 
         $updatedAt = DateTimeField::new ('updatedAt')->setFormTypeOptions([
             'html5' => true,
-            'years' => range(date('Y'), date('Y') + 5),
             'widget' => 'single_text',
             'disabled' => true
         ]);
