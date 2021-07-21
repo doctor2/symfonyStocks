@@ -8,9 +8,9 @@ Api documentation panel - http://127.0.0.1:8000/admin
 
 php bin/console app:stocks:create
 
-php bin/console app:stocks:select-tracked
+php bin/console app:stocks:update-per-six-months
 
-php bin/console app:stocks:select-tracked-per-week
+php bin/console app:stocks:update-per-week
 
 ## Static analysis
 

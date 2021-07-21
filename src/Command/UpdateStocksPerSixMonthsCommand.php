@@ -13,16 +13,17 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class SelectTrackedStocksPerWeekCommand extends Command
+class UpdateStocksPerSixMonthsCommand extends Command
 {
     use CandleTrait;
 
-    private const INTERVAL = 'week';
+    private const INTERVAL = 'month';
 
     private $tinkoffToken;
     private $stockRepository;
-    protected static $defaultName = 'app:stocks:select-tracked-per-week';
-    protected static $defaultDescription = 'Select tracked stocks per week from tinkoff api';
+
+    protected static $defaultName = 'app:stocks:update-per-six-months';
+    protected static $defaultDescription = 'Update stocks per six months by tinkoff api';
 
     public function __construct(string $tinkoffToken, StockRepository $stockRepository)
     {
@@ -50,7 +51,7 @@ class SelectTrackedStocksPerWeekCommand extends Command
                 continue;
             }
 
-            $candles = $market->getCandles($figi, new DateTime('-1 week'), new DateTime(), self::INTERVAL)
+            $candles = $market->getCandles($figi, new DateTime('-6 month'), new DateTime(), self::INTERVAL)
                 ->getPayload()->getCandles();
 
             if (empty($candles)) {
@@ -77,25 +78,13 @@ class SelectTrackedStocksPerWeekCommand extends Command
     private function updateStock(Stock $stock, array $candles): void
     {
         $stock
+            ->setIsTracked(false)
+            ->setSixMonthsMinimum($this->getCandlesMinimum($candles))
+            ->setSixMonthsMaximum($this->getCandlesMaximum($candles))
             ->setCurrent($this->getCandlesCurrent($candles))
-            ->setWeekOpen($this->getCandlesOpen($candles));
-
-        $maximum = $this->getCandlesMaximum($candles);
-
-        if ($maximum > $stock->getSixMonthsMaximum()) {
-            $stock->setSixMonthsMaximum($maximum);
-        }
-
-        $minimum = $this->getCandlesMinimum($candles);
-
-        if ($minimum < $stock->getSixMonthsMaximum()) {
-            $stock->setSixMonthsMinimum($minimum);
-        }
-
-        $stock
-            ->calculateWeekOpenPercent()
             ->calculateSixMonthsMinimumPercent()
-            ->calculateSixMonthsMaximumPercent();
+            ->calculateSixMonthsMaximumPercent()
+        ;
 
         $this->stockRepository->save($stock);
     }
