@@ -87,6 +87,11 @@ class Stock
      */
     private $usefulLinks = '';
 
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $sixMonthsMinimumPercent;
+
     public function __construct(string $figi, string $ticker, string $currency, string $name)
     {
         $this->figi = $figi;
@@ -215,6 +220,22 @@ class Stock
         }
 
         $this->sixMonthsMaximumPercent = round(($this->getSixMonthsMaximum() - $this->getCurrent()) / $this->getSixMonthsMaximum(), 4);
+
+        return $this;
+    }
+
+    public function getSixMonthsMinimumPercent(): ?float
+    {
+        return $this->sixMonthsMinimumPercent;
+    }
+
+    public function calculateSixMonthsMinimumPercent(): self
+    {
+        if (empty($this->getSixMonthsMaximum()) || empty($this->getCurrent())) {
+            return $this;
+        }
+
+        $this->sixMonthsMinimumPercent = round(($this->getCurrent() - $this->getSixMonthsMinimum()) / $this->getSixMonthsMinimum(), 4);
 
         return $this;
     }

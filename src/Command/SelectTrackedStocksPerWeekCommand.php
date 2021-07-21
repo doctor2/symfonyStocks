@@ -94,6 +94,7 @@ class SelectTrackedStocksPerWeekCommand extends Command
 
         $stock
             ->calculateWeekOpenPercent()
+            ->calculateSixMonthsMinimumPercent()
             ->calculateSixMonthsMaximumPercent();
 
         $this->stockRepository->save($stock);

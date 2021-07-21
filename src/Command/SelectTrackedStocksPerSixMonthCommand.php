@@ -81,6 +81,7 @@ class SelectTrackedStocksPerSixMonthCommand extends Command
             ->setSixMonthsMinimum($this->getCandlesMinimum($candles))
             ->setSixMonthsMaximum($this->getCandlesMaximum($candles))
             ->setCurrent($this->getCandlesCurrent($candles))
+            ->calculateSixMonthsMinimumPercent()
             ->calculateSixMonthsMaximumPercent()
         ;
 
