@@ -8,13 +8,11 @@ use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\PercentField;
@@ -61,18 +59,7 @@ class StockCrudController extends AbstractCrudController
         yield PercentField::new ('sixMonthsMaximumPercent', 'MaximumPercent')->setFormTypeOption('disabled', true);
         yield PercentField::new ('weekOpenPercent')->setFormTypeOption('disabled', true);
         yield TextareaField::new ('usefulLinks')->renderAsHtml();
-
-        $updatedAt = DateTimeField::new ('updatedAt')->setFormTypeOptions([
-            'html5' => true,
-            'widget' => 'single_text',
-            'disabled' => true
-        ]);
-
-        if (Crud::PAGE_EDIT === $pageName) {
-            yield $updatedAt->setFormTypeOption('disabled', true);
-        } else {
-            yield $updatedAt;
-        }
+        yield TextareaField::new ('comment');
     }
 
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder

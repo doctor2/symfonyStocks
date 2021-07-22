@@ -92,6 +92,11 @@ class Stock
      */
     private $sixMonthsMinimumPercent;
 
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $comment;
+
     public function __construct(string $figi, string $ticker, string $currency, string $name)
     {
         $this->figi = $figi;
@@ -102,12 +107,12 @@ class Stock
         $this->fillUsefulLinks();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -119,7 +124,7 @@ class Stock
         return $this;
     }
 
-    public function getFigi(): ?string
+    public function getFigi(): string
     {
         return $this->figi;
     }
@@ -131,7 +136,7 @@ class Stock
         return $this;
     }
 
-    public function getTicker(): ?string
+    public function getTicker(): string
     {
         return $this->ticker;
     }
@@ -155,7 +160,7 @@ class Stock
         return $this;
     }
 
-    public function getCurrency(): ?string
+    public function getCurrency(): string
     {
         return $this->currency;
     }
@@ -169,7 +174,7 @@ class Stock
 
     public function __toString(): string
     {
-        return (string) $this->getName();
+        return $this->getName();
     }
 
     public function getIsTracked(): ?bool
@@ -293,7 +298,7 @@ class Stock
         <a href="https://www.tradingview.com/chart/?symbol=TICKET" target="_blank">tradingview</a>, 
         <a href="https://www.tinkoff.ru/invest/catalog/?query=TICKET" target="_blank">tinkoff</a>';
 
-        $this->usefulLinks = str_replace('TICKET', (string) $this->getTicker(), $links);
+        $this->usefulLinks = str_replace('TICKET', $this->getTicker(), $links);
     }
 
     public function setUsefulLinks(string $usefulLinks): self
@@ -306,5 +311,17 @@ class Stock
     public function getUsefulLinks(): ?string
     {
         return $this->usefulLinks;
+    }
+
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function setComment(string $comment): self
+    {
+        $this->comment = $comment;
+
+        return $this;
     }
 }

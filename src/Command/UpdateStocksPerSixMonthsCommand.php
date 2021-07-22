@@ -41,30 +41,28 @@ class UpdateStocksPerSixMonthsCommand extends Command
         /** @var Market $market */
         $market = $client->market();
 
-        $stockFigis = $this->stockRepository->findAllFigis();
+        $stocks = $this->stockRepository->findAll();
 
-        foreach ($stockFigis as $figi) {
-            /** @var Stock $stock */
-            $stock = $this->stockRepository->findOneByFigi($figi);
-
+        /** @var Stock $stock */
+        foreach ($stocks as $stock) {
             if ($stock->getId() < 1) {
                 continue;
             }
 
-            $candles = $market->getCandles($figi, new DateTime('-6 month'), new DateTime(), self::INTERVAL)
+            $candles = $market->getCandles($stock->getFigi(), new DateTime('-6 month'), new DateTime(), self::INTERVAL)
                 ->getPayload()->getCandles();
 
             if (empty($candles)) {
-                $io->error(sprintf('id %d, name %s', (int) $stock->getId(), (string) $stock->getName()));
+                $io->error(sprintf('id %d, name %s', $stock->getId(), $stock->getName()));
 
                 continue;
             }
 
             $this->updateStock($stock, $candles);
 
-            $io->note(sprintf('id %d, name %s', (int) $stock->getId(), (string) $stock->getName()));
+            $io->note(sprintf('id %d, name %s',  $stock->getId(), $stock->getName()));
 
-            sleep(rand(3, 7));
+            sleep(rand(3, 6));
         }
 
         $io->success('Stocks updated');
@@ -78,7 +76,6 @@ class UpdateStocksPerSixMonthsCommand extends Command
     private function updateStock(Stock $stock, array $candles): void
     {
         $stock
-            ->setIsTracked(false)
             ->setSixMonthsMinimum($this->getCandlesMinimum($candles))
             ->setSixMonthsMaximum($this->getCandlesMaximum($candles))
             ->setCurrent($this->getCandlesCurrent($candles))
