@@ -26,6 +26,34 @@ class StockRepository extends ServiceEntityRepository
         return array_column($stockFigis, 'figi');
     }
 
+    /**
+     * @return string[]
+     */
+    public function findAllCountries(): array
+    {
+        $stockFigis = $this->createQueryBuilder('stock')
+            ->select('DISTINCT stock.country')
+            ->where('stock.country IS NOT NULL')
+            ->getQuery()
+            ->getResult();
+
+        return array_column($stockFigis, 'country');
+    }
+
+        /**
+     * @return string[]
+     */
+    public function findAllSectors(): array
+    {
+        $stockFigis = $this->createQueryBuilder('stock')
+            ->select('DISTINCT stock.sector')
+            ->where('stock.sector IS NOT NULL')
+            ->getQuery()
+            ->getResult();
+
+        return array_column($stockFigis, 'sector');
+    }
+
     public function save(Stock $stock): void
     {
         $this->getEntityManager()->persist($stock);

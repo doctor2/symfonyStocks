@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Stock;
+use App\Repository\StockRepository;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
@@ -19,10 +20,18 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\PercentField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\BooleanFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\NumericFilter;
 
 class StockCrudController extends AbstractCrudController
 {
+    private $stockRepository;
+
+    public function __construct(StockRepository $stockRepository)
+    {
+        $this->stockRepository = $stockRepository;
+    }
+
     public static function getEntityFqcn(): string
     {
         return Stock::class;
@@ -42,6 +51,12 @@ class StockCrudController extends AbstractCrudController
             ->add(NumericFilter::new ('sixMonthsMinimumPercent'))
             ->add(NumericFilter::new ('sixMonthsMaximumPercent'))
             ->add(NumericFilter::new ('weekOpenPercent'))
+            ->add(ChoiceFilter::new ('country')
+                ->setChoices($this->makeKeyAndValueTheSame($this->stockRepository->findAllCountries()))
+            )
+            ->add(ChoiceFilter::new ('sector')
+                ->setChoices($this->makeKeyAndValueTheSame($this->stockRepository->findAllSectors()))
+            )
         ;
     }
 
@@ -65,5 +80,15 @@ class StockCrudController extends AbstractCrudController
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
     {
         return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters)->andWhere('entity.current IS NOT NULL');
+    }
+
+    /**
+     * @param string[] $values
+     *
+     * @return string[]
+     */
+    public function makeKeyAndValueTheSame(array $values): array
+    {
+        return array_combine($values, $values);
     }
 }

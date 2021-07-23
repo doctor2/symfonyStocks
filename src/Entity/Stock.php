@@ -97,6 +97,36 @@ class Stock
      */
     private $comment;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $country;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $exchange;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $sector;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $industry;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $percentInsiders;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $percentInstitutions;
+
     public function __construct(string $figi, string $ticker, string $currency, string $name)
     {
         $this->figi = $figi;
@@ -294,9 +324,16 @@ class Stock
 
     public function fillUsefulLinks(): void
     {
-        $links = '<a href="https://ru.investing.com/search/?q=TICKET" target="_blank">investing</a>, 
-        <a href="https://www.tradingview.com/chart/?symbol=TICKET" target="_blank">tradingview</a>, 
-        <a href="https://www.tinkoff.ru/invest/catalog/?query=TICKET" target="_blank">tinkoff</a>';
+        $links = '<a href="https://ru.investing.com/search/?q=TICKET" target="_blank">investing</a>,
+        <a href="https://www.tinkoff.ru/invest/catalog/?query=TICKET" target="_blank">tinkoff</a>,';
+
+        if ($this->getExchange()) {
+            $links .= sprintf('
+            <a href="https://www.tradingview.com/symbols/%s-%s/" target="_blank">tradingview</a>', (string) $this->getExchange(), $this->getTicker());
+        } else {
+            $links .= '
+            <a href="https://www.tradingview.com/chart/?symbol=TICKET" target="_blank">tradingview</a>';
+        }
 
         $this->usefulLinks = str_replace('TICKET', $this->getTicker(), $links);
     }
@@ -321,6 +358,78 @@ class Stock
     public function setComment(string $comment): self
     {
         $this->comment = $comment;
+
+        return $this;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?string $country): self
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    public function getExchange(): ?string
+    {
+        return $this->exchange;
+    }
+
+    public function setExchange(?string $exchange): self
+    {
+        $this->exchange = $exchange;
+
+        return $this;
+    }
+
+    public function getSector(): ?string
+    {
+        return $this->sector;
+    }
+
+    public function setSector(?string $sector): self
+    {
+        $this->sector = $sector;
+
+        return $this;
+    }
+
+    public function getIndustry(): ?string
+    {
+        return $this->industry;
+    }
+
+    public function setIndustry(?string $industry): self
+    {
+        $this->industry = $industry;
+
+        return $this;
+    }
+
+    public function getPercentInsiders(): ?float
+    {
+        return $this->percentInsiders;
+    }
+
+    public function setPercentInsiders(?float $percentInsiders): self
+    {
+        $this->percentInsiders = $percentInsiders;
+
+        return $this;
+    }
+
+    public function getPercentInstitutions(): ?float
+    {
+        return $this->percentInstitutions;
+    }
+
+    public function setPercentInstitutions(?float $percentInstitutions): self
+    {
+        $this->percentInstitutions = $percentInstitutions;
 
         return $this;
     }
