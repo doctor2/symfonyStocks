@@ -95,7 +95,7 @@ class Stock
     /**
      * @ORM\Column(type="text")
      */
-    private $comment;
+    private $comment = '';
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)

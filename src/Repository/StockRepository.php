@@ -40,7 +40,7 @@ class StockRepository extends ServiceEntityRepository
         return array_column($stockFigis, 'country');
     }
 
-        /**
+    /**
      * @return string[]
      */
     public function findAllSectors(): array

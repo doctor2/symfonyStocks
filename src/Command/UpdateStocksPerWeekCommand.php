@@ -62,7 +62,7 @@ class UpdateStocksPerWeekCommand extends Command
 
             $io->note(sprintf('id %d, name %s', $stock->getId(), $stock->getName()));
 
-            sleep(rand(2, 6));
+            sleep(rand(2, 4));
         }
 
         $io->success('Stocks updated');
