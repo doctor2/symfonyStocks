@@ -3,7 +3,9 @@
 namespace App\Command;
 
 use App\Entity\Stock;
+use App\Module\Alphavantage\Response\StockOverview;
 use App\Repository\StockRepository;
+use JMS\Serializer\ArrayTransformerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -17,15 +19,17 @@ class UpdateStocksByAlphavantageCommand extends Command
 
     private $alphavantageToken;
     private $stockRepository;
+    private $arrayTransformer;
     private $client;
 
     protected static $defaultName = 'app:stocks:update-by-alphavantage';
     protected static $defaultDescription = 'Update stocks by alphavantage api';
 
-    public function __construct(string $alphavantageToken, StockRepository $stockRepository, HttpClientInterface $client)
+    public function __construct(string $alphavantageToken, StockRepository $stockRepository, ArrayTransformerInterface $arrayTransformer, HttpClientInterface $client)
     {
         $this->alphavantageToken = $alphavantageToken;
         $this->stockRepository = $stockRepository;
+        $this->arrayTransformer = $arrayTransformer;
         $this->client = $client;
 
         parent::__construct();
@@ -55,34 +59,34 @@ class UpdateStocksByAlphavantageCommand extends Command
 
     private function updateStock(Stock $stock): void
     {
-        $additionalStockData = $this->requestAdditionalStockDataByTicket($stock->getTicker());
+        $stockOverview = $this->requestStockOverviewByTicket($stock->getTicker());
 
-        if (empty($additionalStockData) || !isset($additionalStockData['Symbol'])) {
+        if ($stockOverview->isEmpty()) {
             sleep(15);
 
             return;
         } else {
-            sleep(rand(1, 5));
+            sleep(30);
         }
 
         $stock
-            ->setExchange($additionalStockData['Exchange'])
-            ->setCountry($additionalStockData['Country'])
-            ->setSector($additionalStockData['Sector'])
-            ->setIndustry($additionalStockData['Industry'])
-            ->setPercentInsiders((float) $additionalStockData['PercentInsiders'])
-            ->setPercentInstitutions((float) $additionalStockData['PercentInstitutions'])
+            ->setExchange($stockOverview->getExchange())
+            ->setCountry($stockOverview->getCountry())
+            ->setSector($stockOverview->getSector())
+            ->setIndustry($stockOverview->getIndustry())
+            ->setPercentInsiders($stockOverview->getPercentInsiders())
+            ->setPercentInstitutions($stockOverview->getPercentInstitutions())
             ->fillUsefulLinks()
         ;
 
         $this->stockRepository->save($stock);
     }
 
-    /**
-     * @return string[]
-     */
-    public function requestAdditionalStockDataByTicket(string $ticket): array
+    public function requestStockOverviewByTicket(string $ticket): StockOverview
     {
-        return $this->client->request(Request::METHOD_GET, sprintf(self::ALPHAVANTAGE_OVERVIEW_URL, $ticket, $this->alphavantageToken))->toArray();
+        return $this->arrayTransformer->fromArray(
+            $this->client->request(Request::METHOD_GET, sprintf(self::ALPHAVANTAGE_OVERVIEW_URL, $ticket, $this->alphavantageToken))->toArray(),
+            StockOverview::class
+        );
     }
 }
