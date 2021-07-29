@@ -50,7 +50,8 @@ class StockCrudController extends AbstractCrudController
             ->add(BooleanFilter::new ('isTracked'))
             ->add(NumericFilter::new ('sixMonthsMinimumPercent'))
             ->add(NumericFilter::new ('sixMonthsMaximumPercent'))
-            ->add(NumericFilter::new ('weekOpenPercent'))
+            ->add(NumericFilter::new ('currentWeekOpenPercent'))
+            ->add(NumericFilter::new ('lastWeekOpenPercent'))
             ->add(ChoiceFilter::new ('country')
                 ->setChoices($this->makeKeyAndValueTheSame($this->stockRepository->findAllCountries()))
             )
@@ -68,11 +69,11 @@ class StockCrudController extends AbstractCrudController
         yield BooleanField::new ('isTracked');
         yield NumberField::new ('sixMonthsMaximum', 'Maximum')->setFormTypeOption('disabled', true);
         yield NumberField::new ('sixMonthsMinimum', 'Minimum')->setFormTypeOption('disabled', true);
-        yield NumberField::new ('weekOpen')->setFormTypeOption('disabled', true);
         yield NumberField::new ('current')->setFormTypeOption('disabled', true);
-        yield PercentField::new ('sixMonthsMinimumPercent', 'MinimumPercent')->setFormTypeOption('disabled', true);
-        yield PercentField::new ('sixMonthsMaximumPercent', 'MaximumPercent')->setFormTypeOption('disabled', true);
-        yield PercentField::new ('weekOpenPercent')->setFormTypeOption('disabled', true);
+        yield PercentField::new ('sixMonthsMinimumPercent', 'Minimum, %')->setFormTypeOption('disabled', true);
+        yield PercentField::new ('sixMonthsMaximumPercent', 'Maximum, %')->setFormTypeOption('disabled', true);
+        yield PercentField::new ('lastWeekOpenPercent', 'Last week open, %')->setFormTypeOption('disabled', true);
+        yield PercentField::new ('currentWeekOpenPercent', 'Current week open, %')->setFormTypeOption('disabled', true);
         yield TextareaField::new ('usefulLinks')->renderAsHtml();
         yield TextareaField::new ('comment');
     }

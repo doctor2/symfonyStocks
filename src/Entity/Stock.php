@@ -75,12 +75,22 @@ class Stock
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $weekOpen;
+    private $currentWeekOpen;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $weekOpenPercent;
+    private $currentWeekOpenPercent;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $lastWeekOpen;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $lastWeekOpenPercent;
 
     /**
      * @ORM\Column(type="text", options={"default" : ""})
@@ -287,37 +297,72 @@ class Stock
         return $this;
     }
 
-    public function getWeekOpen(): ?float
+    public function getCurrentWeekOpen(): ?float
     {
-        return $this->weekOpen;
+        return $this->currentWeekOpen;
     }
 
-    public function calculateWeekOpenPercent(): self
+    public function setCurrentWeekOpen(?float $weekOpen): self
     {
-        if (empty($this->getWeekOpen()) || empty($this->getCurrent())) {
+        $this->currentWeekOpen = $weekOpen;
+
+        return $this;
+    }
+
+    public function calculateCurrentWeekOpenPercent(): self
+    {
+        if (empty($this->getCurrentWeekOpen()) || empty($this->getCurrent())) {
             return $this;
         }
 
-        $this->weekOpenPercent = round(($this->getCurrent() - $this->getWeekOpen()) / $this->getWeekOpen(), 4);
+        $this->currentWeekOpenPercent = round(($this->getCurrent() - $this->getCurrentWeekOpen()) / $this->getCurrentWeekOpen(), 4);
 
         return $this;
     }
 
-    public function setWeekOpen(?float $weekOpen): self
+    public function getLastWeekOpen(): ?float
     {
-        $this->weekOpen = $weekOpen;
+        return $this->lastWeekOpen;
+    }
+
+    public function setLastWeekOpen(?float $lastWeekOpen): self
+    {
+        $this->lastWeekOpen = $lastWeekOpen;
 
         return $this;
     }
 
-    public function getWeekOpenPercent(): ?float
+    public function getLastWeekOpenPercent(): ?float
     {
-        return $this->weekOpenPercent;
+        return $this->lastWeekOpenPercent;
     }
 
-    public function setWeekOpenPercent(?float $weekOpenPercent): self
+    public function setLastWeekOpenPercent(?float $lastWeekOpenPercent): self
     {
-        $this->weekOpenPercent = $weekOpenPercent;
+        $this->lastWeekOpenPercent = $lastWeekOpenPercent;
+
+        return $this;
+    }
+
+    public function calculateLastWeekOpenPercent(): self
+    {
+        if (empty($this->getLastWeekOpen()) || empty($this->getCurrentWeekOpen())) {
+            return $this;
+        }
+
+        $this->lastWeekOpenPercent = round(($this->getCurrentWeekOpen() - $this->getLastWeekOpen()) / $this->getLastWeekOpen(), 4);
+
+        return $this;
+    }
+
+    public function getCurrentWeekOpenPercent(): ?float
+    {
+        return $this->currentWeekOpenPercent;
+    }
+
+    public function setCurrentWeekOpenPercent(?float $currentWeekOpenPercent): self
+    {
+        $this->currentWeekOpenPercent = $currentWeekOpenPercent;
 
         return $this;
     }

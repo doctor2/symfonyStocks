@@ -49,7 +49,7 @@ class UpdateStocksPerWeekCommand extends Command
                 continue;
             }
 
-            $candles = $market->getCandles($stock->getFigi(), new DateTime('-1 week'), new DateTime(), self::INTERVAL)
+            $candles = $market->getCandles($stock->getFigi(), new DateTime('-2 weeks'), new DateTime(), self::INTERVAL)
                 ->getPayload()->getCandles();
 
             if (empty($candles)) {
@@ -77,7 +77,9 @@ class UpdateStocksPerWeekCommand extends Command
     {
         $stock
             ->setCurrent($this->getCandlesCurrent($candles))
-            ->setWeekOpen($this->getCandlesOpen($candles));
+            ->setCurrentWeekOpen($this->getLastCandlesOpen($candles))
+            ->setLastWeekOpen($this->getFirstCandlesOpen($candles))
+        ;
 
         $maximum = $this->getCandlesMaximum($candles);
 
@@ -92,7 +94,8 @@ class UpdateStocksPerWeekCommand extends Command
         }
 
         $stock
-            ->calculateWeekOpenPercent()
+            ->calculateCurrentWeekOpenPercent()
+            ->calculateLastWeekOpenPercent()
             ->calculateSixMonthsMinimumPercent()
             ->calculateSixMonthsMaximumPercent();
 

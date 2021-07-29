@@ -47,9 +47,19 @@ trait CandleTrait
     /**
      * @param Candle[] $candles
      */
-    private function getCandlesOpen(array $candles): ?float
+    private function getFirstCandlesOpen(array $candles): ?float
     {
         $candle = reset($candles);
+
+        return $candle ? $candle->getO() : null;
+    }
+
+    /**
+     * @param Candle[] $candles
+     */
+    private function getLastCandlesOpen(array $candles): ?float
+    {
+        $candle = end($candles);
 
         return $candle ? $candle->getO() : null;
     }
