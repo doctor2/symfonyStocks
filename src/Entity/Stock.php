@@ -85,12 +85,12 @@ class Stock
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $lastWeekOpen;
+    private $previousWeekOpen;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $lastWeekOpenPercent;
+    private $previousWeekOpenPercent;
 
     /**
      * @ORM\Column(type="text", options={"default" : ""})
@@ -320,37 +320,37 @@ class Stock
         return $this;
     }
 
-    public function getLastWeekOpen(): ?float
+    public function getPreviousWeekOpen(): ?float
     {
-        return $this->lastWeekOpen;
+        return $this->previousWeekOpen;
     }
 
-    public function setLastWeekOpen(?float $lastWeekOpen): self
+    public function setPreviousWeekOpen(?float $previousWeekOpen): self
     {
-        $this->lastWeekOpen = $lastWeekOpen;
+        $this->previousWeekOpen = $previousWeekOpen;
 
         return $this;
     }
 
-    public function getLastWeekOpenPercent(): ?float
+    public function getPreviousWeekOpenPercent(): ?float
     {
-        return $this->lastWeekOpenPercent;
+        return $this->previousWeekOpenPercent;
     }
 
-    public function setLastWeekOpenPercent(?float $lastWeekOpenPercent): self
+    public function setPreviousWeekOpenPercent(?float $previousWeekOpenPercent): self
     {
-        $this->lastWeekOpenPercent = $lastWeekOpenPercent;
+        $this->previousWeekOpenPercent = $previousWeekOpenPercent;
 
         return $this;
     }
 
-    public function calculateLastWeekOpenPercent(): self
+    public function calculatePreviousWeekOpenPercent(): self
     {
-        if (empty($this->getLastWeekOpen()) || empty($this->getCurrentWeekOpen())) {
+        if (empty($this->getPreviousWeekOpen()) || empty($this->getCurrentWeekOpen())) {
             return $this;
         }
 
-        $this->lastWeekOpenPercent = round(($this->getCurrentWeekOpen() - $this->getLastWeekOpen()) / $this->getLastWeekOpen(), 4);
+        $this->previousWeekOpenPercent = round(($this->getCurrentWeekOpen() - $this->getPreviousWeekOpen()) / $this->getPreviousWeekOpen(), 4);
 
         return $this;
     }
