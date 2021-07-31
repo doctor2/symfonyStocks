@@ -9,7 +9,7 @@ trait CandleTrait
     /**
      * @param Candle[] $candles
      */
-    private function getCandlesMaximum(array $candles): float
+    private function getCandlesMaximum(array $candles, ?float $initial = null): float
     {
         return (float) array_reduce($candles, function ($carry, Candle $candle) {
             if ($candle->getH() > $carry) {
@@ -17,13 +17,13 @@ trait CandleTrait
             }
 
             return $carry;
-        });
+        }, $initial ?? PHP_FLOAT_MIN);
     }
 
     /**
      * @param Candle[] $candles
      */
-    private function getCandlesMinimum(array $candles): float
+    private function getCandlesMinimum(array $candles, ?float $initial = null): float
     {
         return (float) array_reduce($candles, function ($carry, Candle $candle) {
             if ($candle->getL() < $carry) {
@@ -31,7 +31,7 @@ trait CandleTrait
             }
 
             return $carry;
-        }, PHP_FLOAT_MAX);
+        }, $initial ?? PHP_FLOAT_MAX);
     }
 
     /**

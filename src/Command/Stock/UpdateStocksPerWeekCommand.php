@@ -80,25 +80,13 @@ class UpdateStocksPerWeekCommand extends Command
             ->setCurrent($this->getCandlesCurrent($candles))
             ->setCurrentWeekOpen($this->getLastCandlesOpen($candles))
             ->setPreviousWeekOpen($this->getFirstCandlesOpen($candles))
-        ;
-
-        $maximum = $this->getCandlesMaximum($candles);
-
-        if ($maximum > $stock->getSixMonthsMaximum()) {
-            $stock->setSixMonthsMaximum($maximum);
-        }
-
-        $minimum = $this->getCandlesMinimum($candles);
-
-        if ($minimum < $stock->getSixMonthsMinimum()) {
-            $stock->setSixMonthsMinimum($minimum);
-        }
-
-        $stock
+            ->setSixMonthsMaximum($this->getCandlesMaximum($candles, $stock->getSixMonthsMaximum()))
+            ->setSixMonthsMinimum($this->getCandlesMinimum($candles, $stock->getSixMonthsMinimum()))
             ->calculateCurrentWeekOpenPercent()
             ->calculatePreviousWeekOpenPercent()
             ->calculateSixMonthsMinimumPercent()
-            ->calculateSixMonthsMaximumPercent();
+            ->calculateSixMonthsMaximumPercent()
+        ;
 
         $this->stockRepository->save($stock);
     }
