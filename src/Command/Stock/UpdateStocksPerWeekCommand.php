@@ -90,7 +90,7 @@ class UpdateStocksPerWeekCommand extends Command
 
         $minimum = $this->getCandlesMinimum($candles);
 
-        if ($minimum < $stock->getSixMonthsMaximum()) {
+        if ($minimum < $stock->getSixMonthsMinimum()) {
             $stock->setSixMonthsMinimum($minimum);
         }
 
