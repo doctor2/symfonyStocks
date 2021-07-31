@@ -276,7 +276,7 @@ class Stock
 
     public function calculateSixMonthsMinimumPercent(): self
     {
-        if (empty($this->getSixMonthsMaximum()) || empty($this->getCurrent())) {
+        if (empty($this->getSixMonthsMinimum()) || empty($this->getCurrent())) {
             return $this;
         }
 
@@ -337,13 +337,6 @@ class Stock
         return $this->previousWeekOpenPercent;
     }
 
-    public function setPreviousWeekOpenPercent(?float $previousWeekOpenPercent): self
-    {
-        $this->previousWeekOpenPercent = $previousWeekOpenPercent;
-
-        return $this;
-    }
-
     public function calculatePreviousWeekOpenPercent(): self
     {
         if (empty($this->getPreviousWeekOpen()) || empty($this->getCurrentWeekOpen())) {
@@ -360,27 +353,20 @@ class Stock
         return $this->currentWeekOpenPercent;
     }
 
-    public function setCurrentWeekOpenPercent(?float $currentWeekOpenPercent): self
-    {
-        $this->currentWeekOpenPercent = $currentWeekOpenPercent;
-
-        return $this;
-    }
-
     public function fillUsefulLinks(): void
     {
-        $links = '<a href="https://ru.investing.com/search/?q=TICKET" target="_blank">investing</a>,
-        <a href="https://www.tinkoff.ru/invest/catalog/?query=TICKET" target="_blank">tinkoff</a>,';
+        $links = '<a href="https://ru.investing.com/search/?q=TICKER" target="_blank">investing</a>,
+        <a href="https://www.tinkoff.ru/invest/catalog/?query=TICKER" target="_blank">tinkoff</a>,';
 
         if ($this->getExchange()) {
             $links .= sprintf('
             <a href="https://www.tradingview.com/symbols/%s-%s/" target="_blank">tradingview</a>', (string) $this->getExchange(), $this->getTicker());
         } else {
             $links .= '
-            <a href="https://www.tradingview.com/chart/?symbol=TICKET" target="_blank">tradingview</a>';
+            <a href="https://www.tradingview.com/chart/?symbol=TICKER" target="_blank">tradingview</a>';
         }
 
-        $this->usefulLinks = str_replace('TICKET', $this->getTicker(), $links);
+        $this->usefulLinks = str_replace('TICKER', $this->getTicker(), $links);
     }
 
     public function setUsefulLinks(string $usefulLinks): self

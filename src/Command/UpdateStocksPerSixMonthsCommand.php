@@ -49,7 +49,7 @@ class UpdateStocksPerSixMonthsCommand extends Command
                 continue;
             }
 
-            $candles = $market->getCandles($stock->getFigi(), new DateTime('-6 month'), new DateTime(), self::INTERVAL)
+            $candles = $market->getCandles($stock->getFigi(), new DateTime('-6 months'), new DateTime(), self::INTERVAL)
                 ->getPayload()->getCandles();
 
             if (empty($candles)) {
