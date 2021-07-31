@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\Stock;
 
 use App\Entity\Stock;
 use App\Module\Alphavantage\Response\StockOverview;

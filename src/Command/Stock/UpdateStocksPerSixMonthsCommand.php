@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\Stock;
 
+use App\Command\CandleTrait;
 use App\Entity\Stock;
 use App\Repository\StockRepository;
 use DateTime;
@@ -13,17 +14,17 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class UpdateStocksPerWeekCommand extends Command
+class UpdateStocksPerSixMonthsCommand extends Command
 {
     use CandleTrait;
 
-    private const INTERVAL = 'week';
+    private const INTERVAL = 'month';
 
     private $tinkoffToken;
     private $stockRepository;
 
-    protected static $defaultName = 'app:stocks:update-per-week';
-    protected static $defaultDescription = 'Update stocks per week by tinkoff api';
+    protected static $defaultName = 'app:stocks:update-per-six-months';
+    protected static $defaultDescription = 'Update stocks per six months by tinkoff api';
 
     public function __construct(string $tinkoffToken, StockRepository $stockRepository)
     {
@@ -49,7 +50,7 @@ class UpdateStocksPerWeekCommand extends Command
                 continue;
             }
 
-            $candles = $market->getCandles($stock->getFigi(), new DateTime('-2 weeks'), new DateTime(), self::INTERVAL)
+            $candles = $market->getCandles($stock->getFigi(), new DateTime('-6 months'), new DateTime(), self::INTERVAL)
                 ->getPayload()->getCandles();
 
             if (empty($candles)) {
@@ -60,9 +61,9 @@ class UpdateStocksPerWeekCommand extends Command
 
             $this->updateStock($stock, $candles);
 
-            $io->note(sprintf('id %d, name %s', $stock->getId(), $stock->getName()));
+            $io->note(sprintf('id %d, name %s',  $stock->getId(), $stock->getName()));
 
-            sleep(rand(2, 4));
+            sleep(rand(3, 6));
         }
 
         $io->success('Stocks updated');
@@ -76,28 +77,12 @@ class UpdateStocksPerWeekCommand extends Command
     private function updateStock(Stock $stock, array $candles): void
     {
         $stock
+            ->setSixMonthsMinimum($this->getCandlesMinimum($candles))
+            ->setSixMonthsMaximum($this->getCandlesMaximum($candles))
             ->setCurrent($this->getCandlesCurrent($candles))
-            ->setCurrentWeekOpen($this->getLastCandlesOpen($candles))
-            ->setPreviousWeekOpen($this->getFirstCandlesOpen($candles))
-        ;
-
-        $maximum = $this->getCandlesMaximum($candles);
-
-        if ($maximum > $stock->getSixMonthsMaximum()) {
-            $stock->setSixMonthsMaximum($maximum);
-        }
-
-        $minimum = $this->getCandlesMinimum($candles);
-
-        if ($minimum < $stock->getSixMonthsMaximum()) {
-            $stock->setSixMonthsMinimum($minimum);
-        }
-
-        $stock
-            ->calculateCurrentWeekOpenPercent()
-            ->calculatePreviousWeekOpenPercent()
             ->calculateSixMonthsMinimumPercent()
-            ->calculateSixMonthsMaximumPercent();
+            ->calculateSixMonthsMaximumPercent()
+        ;
 
         $this->stockRepository->save($stock);
     }
