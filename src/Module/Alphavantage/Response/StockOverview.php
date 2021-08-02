@@ -47,7 +47,7 @@ class StockOverview
         return $this->exchange;
     }
 
-    public function setExchange($exchange): self
+    public function setExchange(string $exchange): self
     {
         $this->exchange = $exchange;
 
@@ -59,7 +59,7 @@ class StockOverview
         return $this->country;
     }
 
-    public function setCountry($country): self
+    public function setCountry(string $country): self
     {
         $this->country = $country;
 
@@ -71,7 +71,7 @@ class StockOverview
         return $this->sector;
     }
 
-    public function setSector($sector): self
+    public function setSector(string $sector): self
     {
         $this->sector = $sector;
 
@@ -83,7 +83,7 @@ class StockOverview
         return $this->industry;
     }
 
-    public function setIndustry($industry): self
+    public function setIndustry(string $industry): self
     {
         $this->industry = $industry;
 
@@ -95,7 +95,7 @@ class StockOverview
         return $this->percentInsiders;
     }
 
-    public function setPercentInsiders($percentInsiders): self
+    public function setPercentInsiders(float $percentInsiders): self
     {
         $this->percentInsiders = $percentInsiders;
 
@@ -107,7 +107,7 @@ class StockOverview
         return $this->percentInstitutions;
     }
 
-    public function setPercentInstitutions($percentInstitutions): self
+    public function setPercentInstitutions(float $percentInstitutions): self
     {
         $this->percentInstitutions = $percentInstitutions;
 
