@@ -137,6 +137,16 @@ class Stock
      */
     private $percentInstitutions;
 
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $twoWeekOpenPercent;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isGrowingDynamics;
+
     public function __construct(string $figi, string $ticker, string $currency, string $name)
     {
         $this->figi = $figi;
@@ -317,6 +327,11 @@ class Stock
 
         $this->currentWeekOpenPercent = round(($this->getCurrent() - $this->getCurrentWeekOpen()) / $this->getCurrentWeekOpen(), 4);
 
+        $this
+            ->calculateTwoWeekOpenPercent()
+            ->calculateIsGrowingDynamics()
+        ;
+
         return $this;
     }
 
@@ -344,6 +359,11 @@ class Stock
         }
 
         $this->previousWeekOpenPercent = round(($this->getCurrentWeekOpen() - $this->getPreviousWeekOpen()) / $this->getPreviousWeekOpen(), 4);
+
+        $this
+            ->calculateTwoWeekOpenPercent()
+            ->calculateIsGrowingDynamics()
+        ;
 
         return $this;
     }
@@ -461,6 +481,38 @@ class Stock
     public function setPercentInstitutions(?float $percentInstitutions): self
     {
         $this->percentInstitutions = $percentInstitutions;
+
+        return $this;
+    }
+
+    public function getTwoWeekOpenPercent(): ?float
+    {
+        return $this->twoWeekOpenPercent;
+    }
+
+    public function calculateTwoWeekOpenPercent(): self
+    {
+        if (empty($this->getPreviousWeekOpen()) || empty($this->getCurrent())) {
+            return $this;
+        }
+
+        $this->twoWeekOpenPercent = round(($this->getCurrent() - $this->getPreviousWeekOpen()) / $this->getPreviousWeekOpen(), 4);
+
+        return $this;
+    }
+
+    public function getIsGrowingDynamics(): ?bool
+    {
+        return $this->isGrowingDynamics;
+    }
+
+    public function calculateIsGrowingDynamics(): self
+    {
+        if (empty($this->getPreviousWeekOpenPercent()) || empty($this->getCurrentWeekOpenPercent())) {
+            return $this;
+        }
+
+        $this->isGrowingDynamics = $this->getCurrentWeekOpenPercent() > $this->getPreviousWeekOpenPercent();
 
         return $this;
     }

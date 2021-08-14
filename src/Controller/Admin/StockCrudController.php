@@ -48,10 +48,12 @@ class StockCrudController extends AbstractCrudController
     {
         return $filters
             ->add(BooleanFilter::new ('isTracked'))
+            ->add(BooleanFilter::new ('isGrowingDynamics'))
             ->add(NumericFilter::new ('sixMonthsMinimumPercent'))
             ->add(NumericFilter::new ('sixMonthsMaximumPercent'))
             ->add(NumericFilter::new ('currentWeekOpenPercent'))
             ->add(NumericFilter::new ('previousWeekOpenPercent'))
+            ->add(NumericFilter::new ('twoWeekOpenPercent'))
             ->add(ChoiceFilter::new ('country')
                 ->setChoices($this->makeKeyAndValueTheSame($this->stockRepository->findAllCountries()))
             )
