@@ -13,6 +13,7 @@
         "doctrine/orm": "^2.9",
         "dzhdmitry/tinkoff-invest-api": "^0.2.1",
         "easycorp/easyadmin-bundle": "^3.4",
+        "james.rus52/tinkoffinvest": "^1.2",
         "jms/serializer-bundle": "^3.9",
         "stof/doctrine-extensions-bundle": "^1.6",
         "symfony/console": "5.3.*",

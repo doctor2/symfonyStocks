@@ -63,7 +63,7 @@ class UpdateStocksPerSixMonthsCommand extends Command
 
             $io->note(sprintf('id %d, name %s',  $stock->getId(), $stock->getName()));
 
-            sleep(rand(3, 6));
+            sleep(rand(2, 4));
         }
 
         $io->success('Stocks updated');

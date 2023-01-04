@@ -71,11 +71,13 @@ class StockCrudController extends AbstractCrudController
         yield BooleanField::new ('isTracked');
         yield NumberField::new ('sixMonthsMaximum', 'Maximum')->setFormTypeOption('disabled', true);
         yield NumberField::new ('sixMonthsMinimum', 'Minimum')->setFormTypeOption('disabled', true);
+        // yield NumberField::new ('currentWeekOpen')->setFormTypeOption('disabled', true);
         yield NumberField::new ('current')->setFormTypeOption('disabled', true);
         yield PercentField::new ('sixMonthsMinimumPercent', 'Minimum, %')->setFormTypeOption('disabled', true);
         yield PercentField::new ('sixMonthsMaximumPercent', 'Maximum, %')->setFormTypeOption('disabled', true);
-        yield PercentField::new ('previousWeekOpenPercent', 'Previous week open, %')->setFormTypeOption('disabled', true);
-        yield PercentField::new ('currentWeekOpenPercent', 'Current week open, %')->setFormTypeOption('disabled', true);
+        yield PercentField::new ('previousWeekOpenPercent', 'Prev week open, %')->setFormTypeOption('disabled', true);
+        yield PercentField::new ('currentWeekOpenPercent', 'Cur week open, %')->setFormTypeOption('disabled', true);
+        yield PercentField::new ('twoWeekOpenPercent', 'Two week open, %')->setFormTypeOption('disabled', true);
         yield TextareaField::new ('usefulLinks')->renderAsHtml();
         yield TextareaField::new ('comment');
     }

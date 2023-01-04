@@ -90,7 +90,7 @@ class StockOverview
         return $this;
     }
 
-    public function getPercentInsiders(): float
+    public function getPercentInsiders(): ?float
     {
         return $this->percentInsiders;
     }
@@ -102,7 +102,7 @@ class StockOverview
         return $this;
     }
 
-    public function getPercentInstitutions(): float
+    public function getPercentInstitutions(): ?float
     {
         return $this->percentInstitutions;
     }

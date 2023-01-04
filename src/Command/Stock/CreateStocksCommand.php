@@ -6,6 +6,9 @@ use App\Entity\Stock;
 use App\Repository\StockRepository;
 use Dzhdmitry\TinkoffInvestApi\Rest\ClientFactory;
 use Dzhdmitry\TinkoffInvestApi\Rest\Schema\Payload\MarketInstrument;
+use Exception;
+use jamesRUS52\TinkoffInvest\TIClient;
+use jamesRUS52\TinkoffInvest\TISiteEnum;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -32,7 +35,16 @@ class CreateStocksCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $client = (new ClientFactory())->create($this->tinkoffToken);
-        $response = $client->market()->getStocks();
+        try{
+            $client = new TIClient($this->tinkoffToken,TISiteEnum::SANDBOX);
+            dd($client->getStocks());
+            // $response = $client->market()->getStocks();
+
+        } catch(Exception $e) {
+        dd($e->getMessage());
+            
+        }
+
 
         $stockFigis = $this->stockRepository->findAllFigis();
 

@@ -145,7 +145,7 @@ class Stock
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isGrowingDynamics;
+    private $isGrowingDynamics = false;
 
     public function __construct(string $figi, string $ticker, string $currency, string $name)
     {
